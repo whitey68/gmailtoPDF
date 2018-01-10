@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>  
+  <head> 
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <!-- The CSS package above applies Google styling to buttons and other elements. -->
+   <!--include the jquery-->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+       <style>
+    .branding-below {
+      bottom: 56px;
+      top: 0;
+    }
+
+    .branding-text {
+      left: 7px;
+      position: relative;
+      top: 3px;
+    }
+
+    .col-contain {
+      overflow: hidden;
+    }
+
+    .col-one {
+      float: left;
+      width: 50%;
+    }
+
+    .logo {
+      vertical-align: middle;
+    }
+
+    .radio-spacer {
+      height: 20px;
+    }
+
+    .width-100 {
+      width: 100%;
+    }
+   
+  
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+}
+
+li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+
+</style>
+
+  </head>
+  <body>
+
+  <br>
+ <strong> Instructions </strong>
+  <br>  <br>
+  First time you have to authorise the script go to menu "Gmail-to-PDF" and select "open Sidebar..." and authorise the application.
+  <br> <br>
+  Go to the menu to reopen this sidebar and/or to refresher the labels list if needed.
+  <br> <br>
+  <strong>Then </strong>
+  <br> 
+ Click on the get Labels button.
+   <br> 
+  <input id="labelButton" type="button" value="Get Labels"
+  onclick='onClickHandler()' />
+    <br>
+ 
+    <strong>
+      <div id="labels">Labels</div>
+    </strong> <br>
+   <script>
+ // search button click handler
+    function onClickHandler(e){
+        google.script.run
+           .withFailureHandler(function(err){
+               // failure handler callback
+               console.log(err)
+           })
+           .withSuccessHandler(function(arr){
+                // arr is your match array returned by onSearch
+                if(arr.length > 0){
+                    var domList = makeUL(arr);
+                    // document object will be available here
+                    document.getElementById('labels').appendChild(domList);
+                }
+            })
+           .getLabels()
+ }
+    function makeUL(arr) {  
+        var list = document.createElement('ul'); // Create the list element
+        var select = document.getElementById("select")
+        console.log(list); //debug
+        for (var i = 0; i < arr.length; i++) { //loop through the array to make the list
+            var item = document.createElement('li'); // Create the list item
+            item.appendChild(document.createTextNode(arr[i])); // Set its contents
+            console.log(item); //debug
+            list.appendChild(item); // Add it to the list
+             var option = document.createElement("OPTION"),
+                 txt = document.createTextNode(arr[i]);
+                 option.appendChild(txt);
+                 option.setAttribute("value",arr[i]);
+                 select.insertBefore(option,select.lastChild);    
+        }
+        console.log(list); //debug
+        var elem = document.getElementById('labelButton');
+        elem.parentNode.removeChild(elem);
+        return list;
+    }    
+  
+  </script>  
+    
+  <div> 
+  Select one of the labels into the box below.
+ <br> <br>
+  Then, press "Get Emails".
+  <br> <br>
+  </div>    
+  
+  <div>
+  Label: <select id="select">
+            <option value="default" >default</option>
+        </select>
+  <br> <br>
+  
+  
+  <input id= "GEB" type="button" value="Get Emails"
+  onclick='onClickSearchHandler()' />
+
+  <input type="button" value="Close"
+  onclick="google.script.host.close()" />
+  
+   </div>
+<script> 
+
+ function onClickSearchHandler(){
+ var labelInput = document.getElementById("select").value;
+  google.script.run.getEmailDetails(labelInput);
+   var elemB = document.getElementById('GEB');
+   elemB.parentNode.removeChild(elemB);
+ }
+
+</script>  
+</body>
+</html>
+
+
